@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-schedule-scaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: k8s-schedule-scaler
+  template:
+    metadata:
+      labels:
+        name: k8s-schedule-scaler
+    spec:
+      serviceAccountName: k8s-schedule-scaler
+      containers:
+        - name: k8s-schedule-scaler
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - k8s-schedule-scaler
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "k8s-schedule-scaler"
